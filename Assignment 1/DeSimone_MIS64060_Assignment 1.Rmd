@@ -1,0 +1,43 @@
+---
+title: "DeSimone_MIS64060_Assignment 1"
+author: "Heather DeSimone"
+date: "1/24/2022"
+output:
+  word_document: default
+  html_document: default
+  pdf_document: default
+---
+
+```{r}
+DF=read.csv("C:/Users/hdesi/Desktop/MBA/Machine Learning/Best Cities for Startups.csv")## Data frame downloaded from Kaggle https://www.kaggle.com/ramjasmaurya/best-cities-and-countries-for-startups-in-2021
+library(dplyr)
+print(DF) ## Display entire data frame
+```
+```{r}
+print(DF)[, c("city")] ## Display just the city variable
+```
+```{r}
+print(DF)[, c("quality.score")] ## Display just the city variable
+```
+```{r}
+print(DF)[, c("city", "quality.score")] ## Display the quality score for each city
+```
+```{r}
+x<- DF[, c("city")] ##setting variable x as column "city"
+class(x) ## class is character
+x_city_class_complex<- as.complex(x) ##Creating new variable - x (city) as a complex class
+class(x_city_class_complex) ## class is complex
+```
+```{r}
+y<- DF[, c("quality.score")] ##setting variable y as column "quality.score"
+class(y) ## class is numeric
+y_quality_class_character<- as.character(y) ##Creating new variable - y (quality) as a character class
+class(y_quality_class_character) ## class is character
+```
+```{r}
+boxplot(DF[,"business.score"]) ## plot variable "business.score"
+```
+```{r}
+plot(DF$position, DF$business.score, main = "Regression for Position on Business Score", xlab = "Position", ylab = "Score") ## scatter plot variables position and business score
+abline(lm(business.score ~ position, data = DF), col = "red") ## include red regression line
+```

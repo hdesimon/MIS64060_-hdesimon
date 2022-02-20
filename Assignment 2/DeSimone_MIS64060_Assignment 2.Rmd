@@ -1,0 +1,256 @@
+---
+title: "DeSimone_Assignment 2"
+author: "Heather DeSimone"
+date: "2/19/2022"
+output:
+  word_document: default
+  pdf_document: default
+  html_document: default
+---
+##First I have loaded in my data frame and called a summary of the information.
+```{r}
+DF=read.csv("C:/Users/hdesi/Desktop/MBA/Machine Learning/UniversalBank.csv")
+library(dplyr)
+DF <- DF %>% relocate(Personal.Loan, .after = CreditCard)
+summary(DF)
+```
+##Next I will remove the 2 variables that will not be used in my classification/prediction: ID and Zip Code.
+##I have also converted a few attributes over to factors - these attributes classify a yes (1) or no (0) response.I have called a summary to check my work.
+```{r}
+DF$ID<-NULL
+DF$ZIP.Code<-NULL
+DF$Personal.Loan=as.factor(DF$Personal.Loan)
+DF$Securities.Account=as.factor(DF$Securities.Account)
+DF$CD.Account=as.factor(DF$CD.Account)
+DF$Online=as.factor(DF$Online)
+DF$CreditCard=as.factor(DF$CreditCard)
+summary(DF)
+```
+##I will now load the caret and class libraries.
+```{r}
+library(caret)
+library(class)
+```
+##Next I have created a new data set for the normalization process - I have removed the target variable: Personal Loan as we cannot normalize it.
+##I have also removed the attributes that were factored
+```{r}
+Normalization_DF <- data.frame(DF)
+Normalization_DF$Personal.Loan<-NULL
+Normalization_DF$Securities.Account<-NULL
+Normalization_DF$CD.Account<-NULL
+Normalization_DF$Online<-NULL
+Normalization_DF$CreditCard<-NULL
+summary(Normalization_DF)
+```
+##I will now normalize the data.
+```{r}
+Norm_model <- preProcess(Normalization_DF, 
+                         method = c("center", "scale"))
+loan_norm=predict(Norm_model,Normalization_DF)
+summary(loan_norm)
+```
+##I will now add the attributes back in that I removed for normalization.
+```{r}
+loan_norm$Personal.Loan=DF$Personal.Loan
+loan_norm$Securities.Account=DF$Securities.Account
+loan_norm$CD.Account=DF$CD.Account
+loan_norm$Online=DF$Online
+loan_norm$CreditCard=DF$CreditCard
+summary(loan_norm)
+```
+##I will now separate my data into training and validating sets - training = 60% and validation = 40%.
+```{r}
+Train_Index = createDataPartition(DF$Personal.Loan,p=0.6, list=FALSE)
+Train.df=loan_norm[Train_Index,]
+Validation.df=loan_norm[-Train_Index,] 
+```
+##Question #1
+##I will now input the attributes of the 1st customer for prediction.
+```{r}
+To_Predict=data.frame(Age=40, Experience=10,
+                      Income=84,Family=2,
+                      CCAvg=2,Education=2,
+                      Mortgage=0,
+                      Securities.Account=0,
+                      CD.Account=0,
+                      Online=1,
+                      CreditCard=1)
+
+print(To_Predict)
+```
+##I will remove the attributes that were factored.
+```{r}
+To_Predict_norm=To_Predict
+To_Predict_norm$Personal.Loan<-NULL
+To_Predict_norm$Securities.Account<-NULL
+To_Predict_norm$CD.Account<-NULL
+To_Predict_norm$Online<-NULL
+To_Predict_norm$CreditCard<-NULL
+```
+##I will now normalize the data.
+```{r}
+To_Predict_norm=predict(Norm_model,To_Predict_norm)
+```
+##I will now add the attributes back in that I removed for normalization.
+```{r}
+To_Predict_norm$Personal.Loan<-To_Predict$Personal.Loan
+To_Predict_norm$Securities.Account<-To_Predict$Securities.Account
+To_Predict_norm$CD.Account<-To_Predict$CD.Account
+To_Predict_norm$Online<-To_Predict$Online
+To_Predict_norm$CreditCard<-To_Predict$CreditCard
+print(To_Predict_norm)
+```
+##I will now use the knn function to make my prediction.
+```{r}
+Train.df <- Train.df %>% relocate(Personal.Loan, .after = CreditCard)
+Prediction <-knn(train=Train.df[1:11], 
+                 test=To_Predict_norm[1:11],
+                 cl=Train.df$Personal.Loan,
+                 k=1)
+print(Prediction)
+```
+##This customer is predicted NOT to accept the personal loan
+
+##Question #2
+##I will now build the knn model that will give the best value of k that balances between overfitting and underfitting.
+```{r}
+set.seed(123)
+
+fitControl <- trainControl(method = "repeatedcv",
+                           number = 3,
+                           repeats = 2)
+
+searchGrid=expand.grid(k = 1:10)
+
+Knn.model=train(Personal.Loan~., 
+                data=Train.df,
+                method='knn',
+                tuneGrid=searchGrid,
+                trControl = fitControl,)
+
+Knn.model
+```
+##The best k value to use is 3.
+##Question #3
+##First I will use the predict function of the caret package.
+```{r}
+predictions<-predict(Knn.model,Validation.df)
+```
+#Now I will compute the confusion matrix using the caret package.
+```{r}
+confusionMatrix(predictions,Validation.df$Personal.Loan)
+
+```
+
+##Question #4
+##I will now input the attributes of the 2nd customer for prediction. *Note that this customer information is the same as the 1st customer.
+```{r}
+To_Predict2=data.frame(Age=40, Experience=10,
+                      Income=84,Family=2,
+                      CCAvg=2,Education=2,
+                      Mortgage=0,
+                      Securities.Account=0,
+                      CD.Account=0,
+                      Online=1,
+                      CreditCard=1)
+
+print(To_Predict2)
+```
+##I will remove the attributes that were factored.
+```{r}
+To_Predict_norm2=To_Predict2
+To_Predict_norm2$Personal.Loan<-NULL
+To_Predict_norm2$Securities.Account<-NULL
+To_Predict_norm2$CD.Account<-NULL
+To_Predict_norm2$Online<-NULL
+To_Predict_norm2$CreditCard<-NULL
+```
+##I will now normalize the data.
+```{r}
+To_Predict_norm2=predict(Norm_model,To_Predict_norm2)
+```
+##I will now add the attributes back in that I removed for normalization.
+```{r}
+To_Predict_norm2$Personal.Loan<-To_Predict2$Personal.Loan
+To_Predict_norm2$Securities.Account<-To_Predict2$Securities.Account
+To_Predict_norm2$CD.Account<-To_Predict2$CD.Account
+To_Predict_norm2$Online<-To_Predict2$Online
+To_Predict_norm2$CreditCard<-To_Predict2$CreditCard
+print(To_Predict_norm2)
+```
+##I will now use the knn function to make my prediction.I am using k=3 as it is the best k value.
+```{r}
+Train.df <- Train.df %>% relocate(Personal.Loan, .after = CreditCard)
+Prediction <-knn(train=Train.df[1:11], 
+                 test=To_Predict_norm2[1:11],
+                 cl=Train.df$Personal.Loan,
+                 k=3)
+print(Prediction)
+```
+
+##This customer is predicted NOT to take out the personal loan
+##Question 5
+##I will now repartition my data into training (50%), Validation (30%), and test (20%).
+```{r}
+Train_Index2 = createDataPartition(DF$Personal.Loan,p=0.5, list=FALSE)
+Train.df2=loan_norm[Train_Index2,]
+Validation.df2=loan_norm[-Train_Index2,] 
+
+```
+
+##I will now input the attributes of the 1st customer for prediction.
+```{r}
+To_Predict3=data.frame(Age=40, Experience=10,
+                      Income=84,Family=2,
+                      CCAvg=2,Education=2,
+                      Mortgage=0,
+                      Securities.Account=0,
+                      CD.Account=0,
+                      Online=1,
+                      CreditCard=1)
+
+print(To_Predict3)
+```
+##I will remove the attributes that were factored.
+```{r}
+To_Predict_norm3=To_Predict3
+To_Predict_norm3$Personal.Loan<-NULL
+To_Predict_norm3$Securities.Account<-NULL
+To_Predict_norm3$CD.Account<-NULL
+To_Predict_norm3$Online<-NULL
+To_Predict_norm3$CreditCard<-NULL
+```
+##I will now normalize the data.
+```{r}
+To_Predict_norm3=predict(Norm_model,To_Predict_norm3)
+```
+##I will now add the attributes back in that I removed for normalization.
+```{r}
+To_Predict_norm3$Personal.Loan<-To_Predict3$Personal.Loan
+To_Predict_norm3$Securities.Account<-To_Predict3$Securities.Account
+To_Predict_norm3$CD.Account<-To_Predict3$CD.Account
+To_Predict_norm3$Online<-To_Predict3$Online
+To_Predict_norm3$CreditCard<-To_Predict3$CreditCard
+print(To_Predict_norm3)
+```
+##I will now use the knn function to make my prediction.
+```{r}
+Train.df2 <- Train.df2 %>% relocate(Personal.Loan, .after = CreditCard)
+Prediction <-knn(train=Train.df2[1:11], 
+                 test=To_Predict_norm2[1:11],
+                 cl=Train.df2$Personal.Loan,
+                 k=3)
+print(Prediction)
+```
+##Now I will create my confusion matrix
+##First I will use the predict function of the caret package.
+```{r}
+predictions2<-predict(Knn.model,Validation.df2)
+```
+
+#Now I will compute the confusion matrix using the caret package.
+```{r}
+confusionMatrix(predictions2,Validation.df2$Personal.Loan)
+
+```
+##The prediction stands that the customer will not take out the personal loan. Accuracy from the prior matrix to this one has increased.

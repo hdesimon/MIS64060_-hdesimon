@@ -1,0 +1,87 @@
+---
+title: "DeSimone_MS64060_Assignment 3"
+author: "Heather DeSimone"
+date: "3/5/2022"
+output:
+  word_document: default
+  html_document: default
+  pdf_document: default
+---
+
+##First I have loaded in my data frame and called a summary of the information.
+```{r}
+DF=read.csv("C:/Users/hdesi/Desktop/MBA/Machine Learning/UniversalBank2.csv")
+library(dplyr)
+library(caret)
+library(class)
+library(ISLR)
+DF <- DF %>% relocate(Personal.Loan, .after = CreditCard)
+summary(DF)
+```
+##I have converted a few attributes over to factors - these attributes classify a yes (1) or no (0) response.I have called a summary to check my work.
+```{r}
+DF$Personal.Loan=as.factor(DF$Personal.Loan)
+DF$Securities.Account=as.factor(DF$Securities.Account)
+DF$CD.Account=as.factor(DF$CD.Account)
+DF$Online=as.factor(DF$Online)
+DF$CreditCard=as.factor(DF$CreditCard)
+summary(DF)
+```
+##Question A
+##I will now separate my data into training and validating sets - training = 60% and validation = 40%.
+##I have also created my pivot table.
+```{r}
+Train_Index = createDataPartition(DF$Personal.Loan,p=0.6, list=FALSE)
+Train.df=DF[Train_Index,]
+Validation.df=DF[-Train_Index,] 
+
+mytable <- xtabs(~ CreditCard+Online+Personal.Loan, data=Train.df)
+ftable(mytable) 
+```
+##Question B
+##The probability that a customer will accept a loan offer based condionally that they have a credit card and online account is roughly 10% (.0996)
+
+
+##Question C
+##Creating my 2 new pivot tables
+```{r}
+table(Personal.Loan=Train.df$Personal.Loan, Online=Train.df$Online)
+table(Personal.Loan=Train.df$Personal.Loan, CreditCard=Train.df$CreditCard)
+```
+##Question D
+
+##i. P(CC = 1 | Loan = 1) (the proportion of credit card holders among the loan acceptors)
+## Answer is 92/(196+92) = .319 = 32%
+
+##ii. P(Online = 1 | Loan = 1)  (the proportion of Online users among the loan acceptors)
+## Answer is 172/(116+172) = .597 = 60%
+
+##iii. P(Loan = 1) (the proportion of loan acceptors)  
+## Answer is (196+92)/(1917+795+196+92) = 288/3000 = .096 = 10%
+
+##iv. P(CC = 1 | Loan = 0)  
+##Answer is 795/(795+1917) = .293 = 29%
+
+##v. P(Online = 1 | Loan = 0) 
+## Answer is 1594/(1118+1594) = .587 = 59%
+
+##vi. P(Loan = 0) 
+## Answer is (1917+795)/(1917+795+196+92) = .904 = 90%
+
+##Question E
+##P(Loan = 1 | CC = 1, Online = 1).
+##P(Loan = 1) = .319*.597 = .19
+
+##Question F
+##The pivot table is more accurate because there are more variables used in the prediction. The Naive Bayes assumes that each prediction is independent from each variable.
+
+##Question G
+##Running Naive Bayes on the data
+```{r}
+library(e1071)
+nb.model<-naiveBayes (Personal.Loan~CreditCard+Online, data=Train.df)
+To_Predict=data.frame(CreditCard='1', Online='1')
+predict(nb.model,To_Predict,type='raw')
+```
+##The above running of the naive bayes on my data is very close to the prediction I made in Question B. Question E has a very different answer than B and G. I would conclude that 10% is the correct prediction.
+

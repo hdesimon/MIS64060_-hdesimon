@@ -1,0 +1,157 @@
+---
+title: "DeSimone_MS64060_Assignment 4"
+author: "Heather DeSimone"
+date: "3/19/2022"
+output:
+  word_document: default
+  pdf_document: default
+  html_document: default
+---
+
+
+##First I have loaded in my data frame and called a summary of the information.
+```{r}
+df.original=read.csv("C:/Users/hdesi/Desktop/MBA/Machine Learning/Pharmaceuticals.csv")
+df.original.names.numerical=read.csv("C:/Users/hdesi/Desktop/MBA/Machine Learning/Pharmaceuticals.csv")[,c(1:11)]
+df=read.csv("C:/Users/hdesi/Desktop/MBA/Machine Learning/Pharmaceuticals.csv")[,c(3:11)]
+library(ISLR)
+library(dplyr)
+library(tidyverse)
+library(factoextra)
+set.seed(123)
+summary(df)
+```
+
+```{r}
+df <- scale(df) #z-score
+distance <- get_dist(df)
+fviz_dist(distance)
+```
+##Will try k=4 first since 4 is the median distance shown in the above graph
+##Will first use 25 restarts as it seems to be a typical number of random centroids to start with (based on the internet community)
+```{r}
+k4 <- kmeans(df, centers = 4, nstart = 25)
+k4$centers
+k4$size
+## 4, 8, 6, 3
+
+##21 data points total so lets look at where the 1st, last, and middle data points are 
+k4$cluster[1] ##cluster 2
+k4$cluster[10] ##cluster 2
+k4$cluster[21] ##cluster 2
+
+fviz_cluster(k4, data = df) ##Visual
+```
+##Lets see what happens with k=5
+```{r}
+k5 <- kmeans(df, centers = 5, nstart = 25)
+k5$centers
+k5$size
+## 4, 2, 3, 8, 4
+
+##21 data points total so lets look at where the 1st, last, and middle data points are 
+k5$cluster[1] ##cluster 4
+k5$cluster[10] ##cluster 4
+k5$cluster[21] ##cluster 4
+##These data points are all falling in the same bucket - close together
+
+fviz_cluster(k5, data = df) ##Visual
+```
+
+##Lets see what happens with k=3
+```{r}
+k3 <- kmeans(df, centers = 3, nstart = 25)
+k3$centers
+k3$size
+## 11, 4, 6
+
+##21 data points total so lets look at where the 1st, last, and middle data points are 
+k3$cluster[1] ##cluster 1
+k3$cluster[10] ##cluster 1
+k3$cluster[21] ##cluster 1
+##These data points are all falling in the same bucket - close together
+
+fviz_cluster(k3, data = df) ##Visual
+```
+##So far it looks like k=4 is the best option as it disperses the data somewhat evenly without splitting the data too drastically (a cluster of 1 or 2 observations doesn't seem to be helpful)
+
+```{r}
+fviz_nbclust(df, kmeans, method = "wss")
+```
+##Based on the elbow method graph, it looks like K = 4, 5, or 6 is the optimal number of clusters
+```{r}
+fviz_nbclust(df, kmeans, method = "silhouette")
+```
+##Based on the silhouette method, K=5 is the optimal number of clusters. We will use k=5
+##I will use k=5 and now use the manhattan distance for clustering the data
+```{r}
+library(flexclust)
+set.seed(123)
+k5.manhattan = kcca(df, k=5, kccaFamily("kmedians"))
+k5
+```
+##Based on our two models, it seems that the firms in cluster 5 are the top performers.
+
+
+##Now I will examine 2 specific attributes - ROE & ROA - The higher the ROE & ROA are, the better the firm is performing and will probably continue to perform well.
+```{r}
+ROE.ROA.DF=read.csv("C:/Users/hdesi/Desktop/MBA/Machine Learning/Pharmaceuticals.csv")[,c(6,7)]
+set.seed(123)
+summary(ROE.ROA.DF)
+```
+##Looking for the best k value
+```{r}
+ROE.ROA.DF <- scale(ROE.ROA.DF) #z-score
+distance <- get_dist(ROE.ROA.DF)
+fviz_dist(distance)
+
+fviz_nbclust(ROE.ROA.DF, kmeans, method = "wss")##elbow
+fviz_nbclust(ROE.ROA.DF, kmeans, method = "silhouette")
+
+```
+##Based on both methods, k=2 or k=3 is optimal - we will use 3 as 2 is too insignificant
+```{r}
+ROA.ROE.PERFORMANCE <- kmeans(ROE.ROA.DF, centers = 3, nstart = 25)
+ROA.ROE.PERFORMANCE$centers
+ROA.ROE.PERFORMANCE$size
+## 3, 8, 10
+
+fviz_cluster(ROA.ROE.PERFORMANCE, data = ROE.ROA.DF) ##Visual
+```
+##Firms in cluster 1 have the highest ROA and ROE - data points 11,17, & 21
+##Best: 11 - GlaxoSmithKline plc
+##Also High Performers:    17 - Pfizer Inc    21 - Wyeth
+
+
+##We will examine the market capitalization and the price to earnings ratio to determine the worth of a firm (in terms of investing).
+```{r}
+FIRM.WORTH.DF=read.csv("C:/Users/hdesi/Desktop/MBA/Machine Learning/Pharmaceuticals.csv")[,c(3,5)]
+set.seed(123)
+summary(FIRM.WORTH.DF)
+```
+##Looking for the best k value
+```{r}
+FIRM.WORTH.DF <- scale(FIRM.WORTH.DF) #z-score
+distance <- get_dist(FIRM.WORTH.DF)
+fviz_dist(distance)
+
+fviz_nbclust(FIRM.WORTH.DF, kmeans, method = "wss")##elbow
+fviz_nbclust(FIRM.WORTH.DF, kmeans, method = "silhouette")
+
+```
+##Based on both methods, k=3 is optimal 
+```{r}
+FIRM.WORTH <- kmeans(FIRM.WORTH.DF, centers = 3, nstart = 25)
+FIRM.WORTH$centers
+FIRM.WORTH$size
+## 5, 14, 2
+
+fviz_cluster(FIRM.WORTH, data = FIRM.WORTH.DF) ##Visual
+```
+##A high PE Ratio can be seen as good or bad, depending. Since these are established firms rather than a startup, we want a lower PE Ratio indicating that we are not overpaying for the value of the stock. A higher market capitalization is always better
+##The firm with the best stock value (you should invest) is 13 - Johnson & Johnson (in my opinion)
+##Options in cluster 1 have the best stock value
+
+##Are other attributes are valuable to look at, but the 4 I have chosen to concentrate on will lead to the best odds of high performance if stock is purchased. Looking into the other attributes may cloud the waters.
+
+##If only one stock can be purchased than the best option would be Pfizer Inc who is located in high performing ares in their clusters of both segmentations.

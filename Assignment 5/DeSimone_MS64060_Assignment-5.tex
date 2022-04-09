@@ -1,0 +1,648 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{lmodern}
+\usepackage{ifxetex,ifluatex}
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  pdftitle={DeSimone\_MS64060\_Assignment 5},
+  pdfauthor={Heather DeSimone},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
+\usepackage[margin=1in]{geometry}
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\ifluatex
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+
+\title{DeSimone\_MS64060\_Assignment 5}
+\author{Heather DeSimone}
+\date{4/9/2022}
+
+\begin{document}
+\maketitle
+
+\#\#First I have loaded in my data frame and removed the cereals that
+are missing information.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(dplyr)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Attaching package: 'dplyr'
+\end{verbatim}
+
+\begin{verbatim}
+## The following objects are masked from 'package:stats':
+## 
+##     filter, lag
+\end{verbatim}
+
+\begin{verbatim}
+## The following objects are masked from 'package:base':
+## 
+##     intersect, setdiff, setequal, union
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(caret)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning: package 'caret' was built under R version 4.1.2
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: ggplot2
+\end{verbatim}
+
+\begin{verbatim}
+## Warning: package 'ggplot2' was built under R version 4.1.2
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: lattice
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(class)}
+\FunctionTok{library}\NormalTok{(ISLR)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning: package 'ISLR' was built under R version 4.1.1
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(tidyverse)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning: package 'tidyverse' was built under R version 4.1.3
+\end{verbatim}
+
+\begin{verbatim}
+## -- Attaching packages --------------------------------------- tidyverse 1.3.1 --
+\end{verbatim}
+
+\begin{verbatim}
+## v tibble  3.1.2     v purrr   0.3.4
+## v tidyr   1.1.4     v stringr 1.4.0
+## v readr   2.1.2     v forcats 0.5.1
+\end{verbatim}
+
+\begin{verbatim}
+## Warning: package 'tidyr' was built under R version 4.1.2
+\end{verbatim}
+
+\begin{verbatim}
+## Warning: package 'readr' was built under R version 4.1.3
+\end{verbatim}
+
+\begin{verbatim}
+## Warning: package 'stringr' was built under R version 4.1.2
+\end{verbatim}
+
+\begin{verbatim}
+## Warning: package 'forcats' was built under R version 4.1.3
+\end{verbatim}
+
+\begin{verbatim}
+## -- Conflicts ------------------------------------------ tidyverse_conflicts() --
+## x dplyr::filter() masks stats::filter()
+## x dplyr::lag()    masks stats::lag()
+## x purrr::lift()   masks caret::lift()
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(factoextra)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning: package 'factoextra' was built under R version 4.1.3
+\end{verbatim}
+
+\begin{verbatim}
+## Welcome! Want to learn more? See two factoextra-related books at https://goo.gl/ve3WBa
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(stats)}
+\NormalTok{DF}\OtherTok{=}\FunctionTok{read.csv}\NormalTok{(}\StringTok{"C:/Users/hdesi/Desktop/MBA/Machine Learning/Cereals.csv"}\NormalTok{)}
+\NormalTok{DF }\OtherTok{\textless{}{-}} \FunctionTok{na.omit}\NormalTok{(DF) }\DocumentationTok{\#\#Remove cereals missing data}
+\NormalTok{DF}\SpecialCharTok{$}\NormalTok{mfr}\OtherTok{\textless{}{-}}\ConstantTok{NULL} \DocumentationTok{\#\#Not needed}
+\NormalTok{DF}\SpecialCharTok{$}\NormalTok{type}\OtherTok{\textless{}{-}}\ConstantTok{NULL} \DocumentationTok{\#\#Not needed}
+\FunctionTok{rownames}\NormalTok{(DF) }\OtherTok{\textless{}{-}}\NormalTok{ DF}\SpecialCharTok{$}\NormalTok{name }\DocumentationTok{\#\#Change row name to cereal name rather than numeric value}
+\NormalTok{DF}\SpecialCharTok{$}\NormalTok{name}\OtherTok{\textless{}{-}}\ConstantTok{NULL}
+\FunctionTok{head}\NormalTok{(DF)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##                           calories protein fat sodium fiber carbo sugars potass
+## 100%_Bran                       70       4   1    130  10.0   5.0      6    280
+## 100%_Natural_Bran              120       3   5     15   2.0   8.0      8    135
+## All-Bran                        70       4   1    260   9.0   7.0      5    320
+## All-Bran_with_Extra_Fiber       50       4   0    140  14.0   8.0      0    330
+## Apple_Cinnamon_Cheerios        110       2   2    180   1.5  10.5     10     70
+## Apple_Jacks                    110       2   0    125   1.0  11.0     14     30
+##                           vitamins shelf weight cups   rating
+## 100%_Bran                       25     3      1 0.33 68.40297
+## 100%_Natural_Bran                0     3      1 1.00 33.98368
+## All-Bran                        25     3      1 0.33 59.42551
+## All-Bran_with_Extra_Fiber       25     3      1 0.50 93.70491
+## Apple_Cinnamon_Cheerios         25     1      1 0.75 29.50954
+## Apple_Jacks                     25     2      1 1.00 33.17409
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{sapply}\NormalTok{(DF, class) }\DocumentationTok{\#\#Making sure variables are numerical}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  calories   protein       fat    sodium     fiber     carbo    sugars    potass 
+## "integer" "integer" "integer" "integer" "numeric" "numeric" "integer" "integer" 
+##  vitamins     shelf    weight      cups    rating 
+## "integer" "integer" "numeric" "numeric" "numeric"
+\end{verbatim}
+
+\#\#Creating data frame for normalization
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{DF.norm }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(DF)}
+
+\FunctionTok{head}\NormalTok{(DF.norm)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##                           calories protein fat sodium fiber carbo sugars potass
+## 100%_Bran                       70       4   1    130  10.0   5.0      6    280
+## 100%_Natural_Bran              120       3   5     15   2.0   8.0      8    135
+## All-Bran                        70       4   1    260   9.0   7.0      5    320
+## All-Bran_with_Extra_Fiber       50       4   0    140  14.0   8.0      0    330
+## Apple_Cinnamon_Cheerios        110       2   2    180   1.5  10.5     10     70
+## Apple_Jacks                    110       2   0    125   1.0  11.0     14     30
+##                           vitamins shelf weight cups   rating
+## 100%_Bran                       25     3      1 0.33 68.40297
+## 100%_Natural_Bran                0     3      1 1.00 33.98368
+## All-Bran                        25     3      1 0.33 59.42551
+## All-Bran_with_Extra_Fiber       25     3      1 0.50 93.70491
+## Apple_Cinnamon_Cheerios         25     1      1 0.75 29.50954
+## Apple_Jacks                     25     2      1 1.00 33.17409
+\end{verbatim}
+
+\#\#I will perform hierarchical clustering using Euclidean Distance
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{DF.norm }\OtherTok{\textless{}{-}} \FunctionTok{scale}\NormalTok{(DF) }\DocumentationTok{\#\#Data normalization}
+\NormalTok{DF.norm.Euclidean }\OtherTok{\textless{}{-}} \FunctionTok{dist}\NormalTok{(DF.norm, }\AttributeTok{method =} \StringTok{"euclidean"}\NormalTok{)}
+\NormalTok{hc1 }\OtherTok{\textless{}{-}} \FunctionTok{hclust}\NormalTok{(DF.norm.Euclidean, }\AttributeTok{method =} \StringTok{"complete"}\NormalTok{)}
+
+\FunctionTok{plot}\NormalTok{(hc1, }\AttributeTok{cex =}\NormalTok{ .}\DecValTok{6}\NormalTok{, }\AttributeTok{hang =} \SpecialCharTok{{-}}\DecValTok{1}\NormalTok{) }\DocumentationTok{\#\#Plotting the cluster Dendrogram using all variables still in dataset}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{DeSimone_MS64060_Assignment-5_files/figure-latex/unnamed-chunk-4-1.pdf}
+
+\#\#I will now use Agnes to compare clustering methods to find the best
+one
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(cluster)}
+\NormalTok{hc\_single }\OtherTok{\textless{}{-}} \FunctionTok{agnes}\NormalTok{(DF.norm, }\AttributeTok{method =} \StringTok{"single"}\NormalTok{)}
+\NormalTok{hc\_complete }\OtherTok{\textless{}{-}} \FunctionTok{agnes}\NormalTok{(DF.norm, }\AttributeTok{method =} \StringTok{"complete"}\NormalTok{)}
+\NormalTok{hc\_average }\OtherTok{\textless{}{-}} \FunctionTok{agnes}\NormalTok{(DF.norm, }\AttributeTok{method =} \StringTok{"average"}\NormalTok{)}
+\NormalTok{hc\_ward }\OtherTok{\textless{}{-}} \FunctionTok{agnes}\NormalTok{(DF.norm, }\AttributeTok{method =} \StringTok{"ward"}\NormalTok{) }\DocumentationTok{\#\#Ward is the best method}
+
+\FunctionTok{print}\NormalTok{(hc\_single}\SpecialCharTok{$}\NormalTok{ac)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.6067859
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{print}\NormalTok{(hc\_complete}\SpecialCharTok{$}\NormalTok{ac)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.8353712
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{print}\NormalTok{(hc\_average}\SpecialCharTok{$}\NormalTok{ac)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.7766075
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{print}\NormalTok{(hc\_ward}\SpecialCharTok{$}\NormalTok{ac) }\DocumentationTok{\#\#closest to 1}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.9046042
+\end{verbatim}
+
+\#\#I will now create my Agnes Dendrogram
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{pltree}\NormalTok{(hc\_ward, }\AttributeTok{cex =} \FloatTok{0.6}\NormalTok{, }\AttributeTok{hang =} \SpecialCharTok{{-}}\DecValTok{1}\NormalTok{, }\AttributeTok{main =} \StringTok{"Dendogram of Agnes"}\NormalTok{)}
+\FunctionTok{rect.hclust}\NormalTok{(hc\_ward, }\AttributeTok{k =} \DecValTok{4}\NormalTok{, }\AttributeTok{border =} \DecValTok{1}\SpecialCharTok{:}\DecValTok{4}\NormalTok{) }\DocumentationTok{\#\#4 clusters}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{DeSimone_MS64060_Assignment-5_files/figure-latex/unnamed-chunk-6-1.pdf}
+
+\#\#Now I want to cluster my data by unhealthy variables. For our
+purposes, we will assume that cereals high in calories, fat, sugar, and
+sodium are unhealthy.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{DF.Unhealthy }\OtherTok{\textless{}{-}}\NormalTok{ DF[}\FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{3}\NormalTok{,}\DecValTok{4}\NormalTok{,}\DecValTok{7}\NormalTok{)] }\DocumentationTok{\#\#Calories, fat, sodium, sugar}
+\FunctionTok{head}\NormalTok{(DF.Unhealthy)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##                           calories fat sodium sugars
+## 100%_Bran                       70   1    130      6
+## 100%_Natural_Bran              120   5     15      8
+## All-Bran                        70   1    260      5
+## All-Bran_with_Extra_Fiber       50   0    140      0
+## Apple_Cinnamon_Cheerios        110   2    180     10
+## Apple_Jacks                    110   0    125     14
+\end{verbatim}
+
+\#\#Finding best Agnes method
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{unhealthy\_single }\OtherTok{\textless{}{-}} \FunctionTok{agnes}\NormalTok{(DF.Unhealthy, }\AttributeTok{method =} \StringTok{"single"}\NormalTok{)}
+\NormalTok{unhealthy\_complete }\OtherTok{\textless{}{-}} \FunctionTok{agnes}\NormalTok{(DF.Unhealthy, }\AttributeTok{method =} \StringTok{"complete"}\NormalTok{)}
+\NormalTok{unhealthy\_average }\OtherTok{\textless{}{-}} \FunctionTok{agnes}\NormalTok{(DF.Unhealthy, }\AttributeTok{method =} \StringTok{"average"}\NormalTok{)}
+\NormalTok{unhealthy\_ward }\OtherTok{\textless{}{-}} \FunctionTok{agnes}\NormalTok{(DF.Unhealthy, }\AttributeTok{method =} \StringTok{"ward"}\NormalTok{) }\DocumentationTok{\#\#Best method}
+
+\FunctionTok{print}\NormalTok{(unhealthy\_single}\SpecialCharTok{$}\NormalTok{ac)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.7794119
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{print}\NormalTok{(unhealthy\_complete}\SpecialCharTok{$}\NormalTok{ac)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.967792
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{print}\NormalTok{(unhealthy\_average}\SpecialCharTok{$}\NormalTok{ac)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.9423144
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{print}\NormalTok{(unhealthy\_ward}\SpecialCharTok{$}\NormalTok{ac)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.9868955
+\end{verbatim}
+
+\#\#Ward was the best method for clustering. Now we will create our
+dendograph to look at our clusters for unhealthy variables.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{pltree}\NormalTok{(unhealthy\_ward, }\AttributeTok{cex =} \FloatTok{0.6}\NormalTok{, }\AttributeTok{hang =} \SpecialCharTok{{-}}\DecValTok{1}\NormalTok{, }\AttributeTok{main =} \StringTok{"Dendograph Using Unhealthy Variables:Fat, Calories, Sugar \& Sodium"}\NormalTok{)}
+\FunctionTok{rect.hclust}\NormalTok{(unhealthy\_ward, }\AttributeTok{k =} \DecValTok{4}\NormalTok{, }\AttributeTok{border =} \DecValTok{1}\SpecialCharTok{:}\DecValTok{4}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{DeSimone_MS64060_Assignment-5_files/figure-latex/unnamed-chunk-9-1.pdf}
+
+\#\#So far, it looks like the healthiest cluster is cluster 1(black) and
+the least healthy is cluster 4 (blue)
+
+\#\#Now we will cluster based on healthy variables. Those high in
+protein, fiber, and vitamins are most healthy.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{DF.Healthy }\OtherTok{\textless{}{-}}\NormalTok{ DF[}\FunctionTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{,}\DecValTok{5}\NormalTok{,}\DecValTok{9}\NormalTok{)] }\DocumentationTok{\#\#Protein, fiber, vitamins}
+\FunctionTok{head}\NormalTok{(DF.Healthy)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##                           protein fiber vitamins
+## 100%_Bran                       4  10.0       25
+## 100%_Natural_Bran               3   2.0        0
+## All-Bran                        4   9.0       25
+## All-Bran_with_Extra_Fiber       4  14.0       25
+## Apple_Cinnamon_Cheerios         2   1.5       25
+## Apple_Jacks                     2   1.0       25
+\end{verbatim}
+
+\#\#Finding best Agnes method
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{healthy\_single }\OtherTok{\textless{}{-}} \FunctionTok{agnes}\NormalTok{(DF.Healthy, }\AttributeTok{method =} \StringTok{"single"}\NormalTok{)}
+\NormalTok{healthy\_complete }\OtherTok{\textless{}{-}} \FunctionTok{agnes}\NormalTok{(DF.Healthy, }\AttributeTok{method =} \StringTok{"complete"}\NormalTok{)}
+\NormalTok{healthy\_average }\OtherTok{\textless{}{-}} \FunctionTok{agnes}\NormalTok{(DF.Healthy, }\AttributeTok{method =} \StringTok{"average"}\NormalTok{)}
+\NormalTok{healthy\_ward }\OtherTok{\textless{}{-}} \FunctionTok{agnes}\NormalTok{(DF.Healthy, }\AttributeTok{method =} \StringTok{"ward"}\NormalTok{)}\DocumentationTok{\#\#Best method}
+
+\FunctionTok{print}\NormalTok{(healthy\_single}\SpecialCharTok{$}\NormalTok{ac)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.9950214
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{print}\NormalTok{(healthy\_complete}\SpecialCharTok{$}\NormalTok{ac)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.9957495
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{print}\NormalTok{(healthy\_average}\SpecialCharTok{$}\NormalTok{ac)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.9948298
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{print}\NormalTok{(healthy\_ward}\SpecialCharTok{$}\NormalTok{ac)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.9983455
+\end{verbatim}
+
+\#\#Ward was the best method for clustering. Now we will create our
+dendograph to look at our clusters for healthy variables.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{pltree}\NormalTok{(healthy\_ward, }\AttributeTok{cex =} \FloatTok{0.6}\NormalTok{, }\AttributeTok{hang =} \SpecialCharTok{{-}}\DecValTok{1}\NormalTok{, }\AttributeTok{main =} \StringTok{"Dendograph Using Healthy Variables:Protein, Fiber \& Vitamins"}\NormalTok{)}
+\FunctionTok{rect.hclust}\NormalTok{(healthy\_ward, }\AttributeTok{k =} \DecValTok{4}\NormalTok{, }\AttributeTok{border =} \DecValTok{1}\SpecialCharTok{:}\DecValTok{4}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{DeSimone_MS64060_Assignment-5_files/figure-latex/unnamed-chunk-12-1.pdf}
+
+\#\#Clustering is a bit uneven, but it looks like cluster 1 (Black) is
+the healthiest and there are repeat cereals in this healthy cluster that
+were also in the healthy cluster is our last dendograph
+
+\#\#Now we will look at all of our health related variables together.
+Our cluster will consist of protein, fiber, vitamins, calories, fat,
+sugar, and sodium
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{DF.TotalHealth }\OtherTok{\textless{}{-}}\NormalTok{ DF[}\FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{2}\NormalTok{,}\DecValTok{3}\NormalTok{,}\DecValTok{4}\NormalTok{,}\DecValTok{5}\NormalTok{,}\DecValTok{7}\NormalTok{,}\DecValTok{9}\NormalTok{)]}
+\FunctionTok{head}\NormalTok{(DF.TotalHealth)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##                           calories protein fat sodium fiber sugars vitamins
+## 100%_Bran                       70       4   1    130  10.0      6       25
+## 100%_Natural_Bran              120       3   5     15   2.0      8        0
+## All-Bran                        70       4   1    260   9.0      5       25
+## All-Bran_with_Extra_Fiber       50       4   0    140  14.0      0       25
+## Apple_Cinnamon_Cheerios        110       2   2    180   1.5     10       25
+## Apple_Jacks                    110       2   0    125   1.0     14       25
+\end{verbatim}
+
+\#\#Finding best Agnes
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{TotalHealth\_single }\OtherTok{\textless{}{-}} \FunctionTok{agnes}\NormalTok{(DF.TotalHealth, }\AttributeTok{method =} \StringTok{"single"}\NormalTok{)}
+\NormalTok{TotalHealth\_complete }\OtherTok{\textless{}{-}} \FunctionTok{agnes}\NormalTok{(DF.TotalHealth, }\AttributeTok{method =} \StringTok{"complete"}\NormalTok{)}
+\NormalTok{TotalHealth\_average }\OtherTok{\textless{}{-}} \FunctionTok{agnes}\NormalTok{(DF.TotalHealth, }\AttributeTok{method =} \StringTok{"average"}\NormalTok{)}
+\NormalTok{TotalHealth\_ward }\OtherTok{\textless{}{-}} \FunctionTok{agnes}\NormalTok{(DF.TotalHealth, }\AttributeTok{method =} \StringTok{"ward"}\NormalTok{) }\DocumentationTok{\#\#Best Method}
+
+\FunctionTok{print}\NormalTok{(TotalHealth\_single}\SpecialCharTok{$}\NormalTok{ac)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.8615331
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{print}\NormalTok{(TotalHealth\_complete}\SpecialCharTok{$}\NormalTok{ac)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.9604174
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{print}\NormalTok{(TotalHealth\_average}\SpecialCharTok{$}\NormalTok{ac)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.9306789
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{print}\NormalTok{(TotalHealth\_ward}\SpecialCharTok{$}\NormalTok{ac)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.9837845
+\end{verbatim}
+
+\#\#Ward is again the best method. Now we will look at our dendograph in
+which we clustered based on all health variables (good and bad)
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{pltree}\NormalTok{(TotalHealth\_ward, }\AttributeTok{cex =} \FloatTok{0.6}\NormalTok{, }\AttributeTok{hang =} \SpecialCharTok{{-}}\DecValTok{1}\NormalTok{, }\AttributeTok{main =} \StringTok{"Dendograph:Fat, Cals, Sugars, Sodium, Protein, Fiber \& Vitamins"}\NormalTok{)}
+\FunctionTok{rect.hclust}\NormalTok{(TotalHealth\_ward, }\AttributeTok{k =} \DecValTok{4}\NormalTok{, }\AttributeTok{border =} \DecValTok{1}\SpecialCharTok{:}\DecValTok{4}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{DeSimone_MS64060_Assignment-5_files/figure-latex/unnamed-chunk-15-1.pdf}
+
+\#\#This dendograph looks very similar to the 1st one we did (With
+unhealthy variables) \#\#Cluster 1 (black) looks to be the overall
+healthiest cereals
+
+\#\#I want to create more than 4 cluster using this same overall health
+model
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{pltree}\NormalTok{(TotalHealth\_ward, }\AttributeTok{cex =} \FloatTok{0.6}\NormalTok{, }\AttributeTok{hang =} \SpecialCharTok{{-}}\DecValTok{1}\NormalTok{, }\AttributeTok{main =} \StringTok{"Dendograph:Fat, Cals, Sugars, Sodium, Protein, Fiber \& Vitamins"}\NormalTok{)}
+\FunctionTok{rect.hclust}\NormalTok{(TotalHealth\_ward, }\AttributeTok{k =} \DecValTok{8}\NormalTok{, }\AttributeTok{border =} \DecValTok{1}\SpecialCharTok{:}\DecValTok{4}\NormalTok{) }\DocumentationTok{\#\#8 clusters}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{DeSimone_MS64060_Assignment-5_files/figure-latex/unnamed-chunk-16-1.pdf}
+
+\#\#This 8 cluster model gives us a much more condensed list. With 100\%
+bran in all of our dendograph healthy clusters, we will assume that the
+cluster this cereal falls into is the healthiest group - based on sugar,
+fat, calories, sodium, protein, fiber, and vitamins. The school could
+use any of these dendographs to base their decision on, depending on
+what they are looking for and what they consider healthy. Some people
+feel that a diet low in calories, fat, sugar, and sodium is healthy even
+if those foods are low in nutrients. Some people feel that a diet high
+in vitamins, fiber, and protein are healthy even if they have higher
+calories, fat, sugar. and sodium. I believe that the last dendograph
+should be used (8 clusters) as it takes all of these variables into
+consideration.
+
+\end{document}

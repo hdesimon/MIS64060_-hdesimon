@@ -1,0 +1,175 @@
+---
+title: "DeSimone_MS64060_Assignment 5"
+author: "Heather DeSimone"
+date: "4/9/2022"
+output:
+  word_document: default
+  html_document: default
+  pdf_document: default
+---
+
+##First I have loaded in my data frame and removed the cereals that are missing information.
+```{r}
+library(dplyr)
+library(caret)
+library(class)
+library(ISLR)
+library(tidyverse)
+library(factoextra)
+library(stats)
+DF=read.csv("C:/Users/hdesi/Desktop/MBA/Machine Learning/Cereals.csv")
+DF <- na.omit(DF) ##Remove cereals missing data
+DF$mfr<-NULL ##Not needed
+DF$type<-NULL ##Not needed
+rownames(DF) <- DF$name ##Change row name to cereal name rather than numeric value
+DF$name<-NULL
+head(DF)
+```
+```{r}
+sapply(DF, class) ##Making sure variables are numerical
+
+```
+
+##Creating data frame for normalization
+```{r}
+DF.norm <- data.frame(DF)
+
+head(DF.norm)
+```
+
+##I will perform hierarchical clustering using Euclidean Distance
+```{r}
+DF.norm <- scale(DF) ##Data normalization
+DF.norm.Euclidean <- dist(DF.norm, method = "euclidean")
+hc1 <- hclust(DF.norm.Euclidean, method = "complete")
+
+plot(hc1, cex = .6, hang = -1) ##Plotting the cluster Dendrogram using all variables still in dataset
+```
+
+
+##I will now use Agnes to compare clustering methods to find the best one
+```{r}
+library(cluster)
+hc_single <- agnes(DF.norm, method = "single")
+hc_complete <- agnes(DF.norm, method = "complete")
+hc_average <- agnes(DF.norm, method = "average")
+hc_ward <- agnes(DF.norm, method = "ward") ##Ward is the best method
+
+print(hc_single$ac)
+print(hc_complete$ac)
+print(hc_average$ac)
+print(hc_ward$ac) ##closest to 1
+```
+
+
+##I will now create my Agnes Dendrogram
+```{r}
+pltree(hc_ward, cex = 0.6, hang = -1, main = "Dendogram of Agnes")
+rect.hclust(hc_ward, k = 4, border = 1:4) ##4 clusters
+```
+
+
+##Now I want to cluster my data by unhealthy variables. For our purposes, we will assume that cereals high in calories, fat, sugar, and sodium are unhealthy.
+
+```{r}
+DF.Unhealthy <- DF[c(1,3,4,7)] ##Calories, fat, sodium, sugar
+head(DF.Unhealthy)
+
+```
+
+
+##Finding best Agnes method
+```{r}
+unhealthy_single <- agnes(DF.Unhealthy, method = "single")
+unhealthy_complete <- agnes(DF.Unhealthy, method = "complete")
+unhealthy_average <- agnes(DF.Unhealthy, method = "average")
+unhealthy_ward <- agnes(DF.Unhealthy, method = "ward") ##Best method
+
+print(unhealthy_single$ac)
+print(unhealthy_complete$ac)
+print(unhealthy_average$ac)
+print(unhealthy_ward$ac)
+```
+
+
+##Ward was the best method for clustering. Now we will create our dendograph to look at our clusters for unhealthy variables.
+```{r}
+pltree(unhealthy_ward, cex = 0.6, hang = -1, main = "Dendograph Using Unhealthy Variables:Fat, Calories, Sugar & Sodium")
+rect.hclust(unhealthy_ward, k = 4, border = 1:4)
+```
+
+
+##So far, it looks like the healthiest cluster is cluster 1(black) and the least healthy is cluster 4 (blue)
+
+##Now we will cluster based on healthy variables. Those high in protein, fiber, and vitamins are most healthy.
+```{r}
+DF.Healthy <- DF[c(2,5,9)] ##Protein, fiber, vitamins
+head(DF.Healthy)
+```
+
+
+##Finding best Agnes method
+```{r}
+healthy_single <- agnes(DF.Healthy, method = "single")
+healthy_complete <- agnes(DF.Healthy, method = "complete")
+healthy_average <- agnes(DF.Healthy, method = "average")
+healthy_ward <- agnes(DF.Healthy, method = "ward")##Best method
+
+print(healthy_single$ac)
+print(healthy_complete$ac)
+print(healthy_average$ac)
+print(healthy_ward$ac)
+```
+
+##Ward was the best method for clustering. Now we will create our dendograph to look at our clusters for healthy variables.
+```{r}
+pltree(healthy_ward, cex = 0.6, hang = -1, main = "Dendograph Using Healthy Variables:Protein, Fiber & Vitamins")
+rect.hclust(healthy_ward, k = 4, border = 1:4)
+```
+
+
+##Clustering is a bit uneven, but it looks like cluster 1 (Black) is the healthiest and there are repeat cereals in this healthy cluster that were also in the healthy cluster is our last dendograph
+
+##Now we will look at all of our health related variables together. Our cluster will consist of protein, fiber, vitamins, calories, fat, sugar, and sodium
+```{r}
+DF.TotalHealth <- DF[c(1,2,3,4,5,7,9)]
+head(DF.TotalHealth)
+```
+
+
+##Finding best Agnes
+```{r}
+TotalHealth_single <- agnes(DF.TotalHealth, method = "single")
+TotalHealth_complete <- agnes(DF.TotalHealth, method = "complete")
+TotalHealth_average <- agnes(DF.TotalHealth, method = "average")
+TotalHealth_ward <- agnes(DF.TotalHealth, method = "ward") ##Best Method
+
+print(TotalHealth_single$ac)
+print(TotalHealth_complete$ac)
+print(TotalHealth_average$ac)
+print(TotalHealth_ward$ac)
+```
+
+
+##Ward is again the best method. Now we will look at our dendograph in which we clustered based on all health variables (good and bad)
+```{r}
+pltree(TotalHealth_ward, cex = 0.6, hang = -1, main = "Dendograph:Fat, Cals, Sugars, Sodium, Protein, Fiber & Vitamins")
+rect.hclust(TotalHealth_ward, k = 4, border = 1:4)
+```
+
+
+##This dendograph looks very similar to the 1st one we did (With unhealthy variables)
+##Cluster 1 (black) looks to be the overall healthiest cereals
+
+##I want to create more than 4 cluster using this same overall health model
+```{r}
+pltree(TotalHealth_ward, cex = 0.6, hang = -1, main = "Dendograph:Fat, Cals, Sugars, Sodium, Protein, Fiber & Vitamins")
+rect.hclust(TotalHealth_ward, k = 8, border = 1:4) ##8 clusters
+```
+
+
+##This 8 cluster model gives us a much more condensed list. With 100% bran in all of our dendograph healthy clusters, we will assume that the cluster this cereal falls into is the healthiest group - based on sugar, fat, calories, sodium, protein, fiber, and vitamins. The school could use any of these dendographs to base their decision on, depending on what they are looking for and what they consider healthy. Some people feel that a diet low in calories, fat, sugar, and sodium is healthy even if those foods are low in nutrients. Some people feel that a diet high in vitamins, fiber, and protein are healthy even if they have higher calories, fat, sugar. and sodium. I believe that the last dendograph should be used (8 clusters) as it takes all of these variables into consideration.
+
+```{r}
+
+```

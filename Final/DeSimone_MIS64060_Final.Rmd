@@ -1,0 +1,346 @@
+---
+title: "DeSimone_MIS64060_Final"
+author: "Heather DeSimone"
+date: "4/30/2022"
+output:
+  word_document: default
+  html_document: default
+---
+##Loading my train and test data sets.
+```{r}
+DF.Test=read.csv("C:/Users/hdesi/Desktop/MBA/Machine Learning/Back_order_test.csv")
+DF.Train=read.csv("C:/Users/hdesi/Desktop/MBA/Machine Learning/Back_order_train.csv")
+library(dplyr)
+library(caret)
+library(class)
+library(ISLR)
+library(tidyverse)
+library(factoextra)
+library(stats)
+DF.Test <- na.omit(DF.Test) ##Remove attributes missing data
+DF.Train <- na.omit(DF.Train) ##Remove attributes missing data
+```
+
+##Making sure variables are numerical
+```{r}
+sapply(DF.Train, class) ##Making sure variables are numerical
+```
+
+##Removing uneeded attributes and changing yes/no attributes to factors
+```{r}
+DF.Train$sku<-NULL ##I do not want sku to affect prediction of model
+DF.Train$potential_issue=as.factor(DF.Train$potential_issue)
+DF.Train$deck_risk=as.factor(DF.Train$deck_risk)
+DF.Train$oe_constraint=as.factor(DF.Train$oe_constraint)
+DF.Train$ppap_risk=as.factor(DF.Train$ppap_risk)
+DF.Train$stop_auto_buy=as.factor(DF.Train$stop_auto_buy)
+DF.Train$rev_stop=as.factor(DF.Train$rev_stop)
+DF.Train$went_on_backorder=as.factor(DF.Train$went_on_backorder)
+
+DF.Test$sku<-NULL ##I do not want sku to affect prediction of model
+DF.Test$potential_issue=as.factor(DF.Test$potential_issue)
+DF.Test$deck_risk=as.factor(DF.Test$deck_risk)
+DF.Test$oe_constraint=as.factor(DF.Test$oe_constraint)
+DF.Test$ppap_risk=as.factor(DF.Test$ppap_risk)
+DF.Test$stop_auto_buy=as.factor(DF.Test$stop_auto_buy)
+DF.Test$rev_stop=as.factor(DF.Test$rev_stop)
+DF.Test$went_on_backorder=as.factor(DF.Test$went_on_backorder)
+summary(DF.Train)
+```
+##Double checking variables are numeric
+```{r}
+sapply(DF.Train, class) ##Double checking variables are factored
+```
+##Data is ready
+##Creating a new data set for the normalization process - I have removed the target variable: Went on Backorder.
+##I have also removed the attributes that were factored
+```{r}
+Normalization_DF <- data.frame(DF.Train)
+Normalization_DF$potential_issue<-NULL
+Normalization_DF$deck_risk<-NULL
+Normalization_DF$oe_constraint<-NULL
+Normalization_DF$ppap_risk<-NULL
+Normalization_DF$stop_auto_buy<-NULL
+Normalization_DF$rev_stop<-NULL
+Normalization_DF$went_on_backorder<-NULL
+summary(Normalization_DF)
+```
+##Normalizing the data
+```{r}
+Norm_model <- preProcess(Normalization_DF, 
+                         method = c("center", "scale"))
+backorder_norm=predict(Norm_model,Normalization_DF)
+summary(backorder_norm)
+```
+##Adding back in the attributes that were removed for normalization
+```{r}
+backorder_norm$potential_issue=DF.Train$potential_issue
+backorder_norm$deck_risk=DF.Train$deck_risk
+backorder_norm$oe_constraint=DF.Train$oe_constraint
+backorder_norm$ppap_risk=DF.Train$ppap_risk
+backorder_norm$stop_auto_buy=DF.Train$stop_auto_buy
+backorder_norm$rev_stop=DF.Train$rev_stop
+backorder_norm$went_on_backorder=DF.Train$went_on_backorder
+summary(backorder_norm)
+```
+
+##Separating my training data set into a training and validation set
+```{r}
+Train_Index = createDataPartition(DF.Train$went_on_backorder,p=0.6, list=FALSE)
+Train.df=backorder_norm[Train_Index,]
+Validation.df=backorder_norm[-Train_Index,] 
+
+sapply(lapply(Train.df, unique), length)
+sapply(lapply(Validation.df, unique), length)
+
+```
+
+##Inputing 1st set of attributes for prediction
+```{r}
+To_Predict=data.frame(national_inv=490, lead_time=7.872, in_transit_qty=45.5, forecast_3_month=188.7, forecast_6_month=365.3, forecast_9_month=536, sales_1_month=56.9, sales_3_month=178.5, sales_6_month=352.2, sales_9_month=544, min_bank=53.2, potential_issue=0, pieces_past_due=2.17, perf_6_month_avg=-1.015, perf_12_month_avg=-0.5532, local_bo_qty=0.633, deck_risk=0, oe_constraint=0, ppap_risk=0, stop_auto_buy=1, rev_stop=0)
+
+print(To_Predict)
+```
+
+##Normalizing prediction data
+```{r}
+To_Predict_norm=To_Predict
+To_Predict_norm$potential_issue<-NULL
+To_Predict_norm$deck_risk<-NULL
+To_Predict_norm$oe_constraint<-NULL
+To_Predict_norm$ppap_risk<-NULL
+To_Predict_norm$stop_auto_buy<-NULL
+To_Predict_norm$rev_stop<-NULL
+To_Predict_norm$went_on_backorder<-NULL
+To_Predict_norm=predict(Norm_model,To_Predict_norm)
+```
+
+##Adding attributes back in
+```{r}
+To_Predict_norm$potential_issue=To_Predict$potential_issue
+To_Predict_norm$deck_risk=To_Predict$deck_risk
+To_Predict_norm$oe_constraint=To_Predict$oe_constraint
+To_Predict_norm$ppap_risk=To_Predict$ppap_risk
+To_Predict_norm$stop_auto_buy=To_Predict$stop_auto_buy
+To_Predict_norm$rev_stop=To_Predict$rev_stop
+To_Predict_norm$went_on_backorder=To_Predict$went_on_backorder
+summary(To_Predict_norm)
+
+Train.df$potential_issue=as.numeric(Train.df$potential_issue)
+Train.df$deck_risk=as.numeric(Train.df$deck_risk)
+Train.df$oe_constraint=as.numeric(Train.df$oe_constraint)
+Train.df$ppap_risk=as.numeric(Train.df$ppap_risk)
+Train.df$stop_auto_buy=as.numeric(Train.df$stop_auto_buy)
+Train.df$rev_stop=as.numeric(Train.df$rev_stop)
+
+Validation.df$potential_issue=as.numeric(Validation.df$potential_issue)
+Validation.df$deck_risk=as.numeric(Validation.df$deck_risk)
+Validation.df$oe_constraint=as.numeric(Validation.df$oe_constraint)
+Validation.df$ppap_risk=as.numeric(Validation.df$ppap_risk)
+Validation.df$stop_auto_buy=as.numeric(Validation.df$stop_auto_buy)
+Validation.df$rev_stop=as.numeric(Validation.df$rev_stop)
+```
+
+##Finding best k-value
+```{r}
+set.seed(123)
+
+fitControl <- trainControl(method = "repeatedcv",
+                           number = 3,
+                           repeats = 2)
+
+searchGrid=expand.grid(k = 1:10)
+
+Knn.model=train(went_on_backorder~., 
+                data=Train.df,
+                method='knn',
+                tuneGrid=searchGrid,
+                trControl = fitControl,)
+
+Knn.model
+```
+##Best K-Value is 10
+##Prediction on my training data
+```{r}
+
+Train_Prediction <-knn(train=Train.df[1:21], 
+                 test=To_Predict_norm,
+                 cl=Train.df$went_on_backorder,
+                 k=10)
+print(Train_Prediction)
+```
+
+##Validating my model with validation data
+```{r}
+Validation_prediction <-predict(Knn.model,Validation.df)
+confusionMatrix(Validation_prediction,Validation.df$went_on_backorder)##Creating my confusion matrix
+
+```
+##99% Accuracy points to a strong predictive model for my training/validation set
+##Normalization of test data set
+```{r}
+Normalization_DF_Test <- data.frame(DF.Test)
+Normalization_DF_Test$potential_issue<-NULL
+Normalization_DF_Test$deck_risk<-NULL
+Normalization_DF_Test$oe_constraint<-NULL
+Normalization_DF_Test$ppap_risk<-NULL
+Normalization_DF_Test$stop_auto_buy<-NULL
+Normalization_DF_Test$rev_stop<-NULL
+Normalization_DF_Test$went_on_backorder<-NULL
+
+sapply(Normalization_DF_Test, class)##Checking that format is correct
+```
+##Normalization
+```{r}
+Norm_model_Test <- preProcess(Normalization_DF, 
+                         method = c("center", "scale"))
+backorder_norm_test=predict(Norm_model_Test,Normalization_DF_Test)
+summary(backorder_norm_test)
+```
+
+##Adding factors back in
+```{r}
+backorder_norm_test$potential_issue=DF.Test$potential_issue
+backorder_norm_test$deck_risk=DF.Test$deck_risk
+backorder_norm_test$oe_constraint=DF.Test$oe_constraint
+backorder_norm_test$ppap_risk=DF.Test$ppap_risk
+backorder_norm_test$stop_auto_buy=DF.Test$stop_auto_buy
+backorder_norm_test$rev_stop=DF.Test$rev_stop
+backorder_norm_test$went_on_backorder=DF.Test$went_on_backorder
+```
+
+##Changing factors to numeric values to match model training set parameters
+```{r}
+backorder_norm_test$potential_issue=as.numeric(backorder_norm_test$potential_issue)
+backorder_norm_test$deck_risk=as.numeric(backorder_norm_test$deck_risk)
+backorder_norm_test$oe_constraint=as.numeric(backorder_norm_test$oe_constraint)
+backorder_norm_test$ppap_risk=as.numeric(backorder_norm_test$ppap_risk)
+backorder_norm_test$stop_auto_buy=as.numeric(backorder_norm_test$stop_auto_buy)
+backorder_norm_test$rev_stop=as.numeric(backorder_norm_test$rev_stop)
+
+##Using my test set to check for overfitting
+
+Test_Prediction <-knn(train=Train.df[1:21], 
+                 test=backorder_norm_test[1:21],
+                 cl=Train.df$went_on_backorder,
+                 k=10)
+```
+##Check for overfitting
+```{r}
+Test_Prediction<-predict(Knn.model,backorder_norm_test)
+confusionMatrix(Test_Prediction,backorder_norm_test$went_on_backorder)
+```
+##Test set accuracy decreased slightly, but not enough for concern
+
+##Backorder prediction on 1st sku
+```{r}
+Predict_Sku_3449673=data.frame(national_inv=389335, lead_time=8, in_transit_qty=25884, forecast_3_month=1021940, forecast_6_month=2094452, forecast_9_month=3162260, sales_1_month=299190, sales_3_month=1086554, sales_6_month=2103389, sales_9_month=3195211, min_bank=168852, potential_issue=0, pieces_past_due=79964, perf_6_month_avg=0.82, perf_12_month_avg=0.54, local_bo_qty=0, deck_risk=0, oe_constraint=0, ppap_risk=0, stop_auto_buy=1, rev_stop=0)
+
+Predict_Sku_3449673_norm=Predict_Sku_3449673
+Predict_Sku_3449673_norm$potential_issue<-NULL
+Predict_Sku_3449673_norm$deck_risk<-NULL
+Predict_Sku_3449673_norm$oe_constraint<-NULL
+Predict_Sku_3449673_norm$ppap_risk<-NULL
+Predict_Sku_3449673_norm$stop_auto_buy<-NULL
+Predict_Sku_3449673_norm$rev_stop<-NULL
+Predict_Sku_3449673_norm$went_on_backorder<-NULL
+Predict_Sku_3449673_norm=predict(Norm_model,Predict_Sku_3449673_norm)
+
+Predict_Sku_3449673_norm$potential_issue=Predict_Sku_3449673$potential_issue
+Predict_Sku_3449673_norm$deck_risk=Predict_Sku_3449673$deck_risk
+Predict_Sku_3449673_norm$oe_constraint=Predict_Sku_3449673$oe_constraint
+Predict_Sku_3449673_norm$ppap_risk=Predict_Sku_3449673$ppap_risk
+Predict_Sku_3449673_norm$stop_auto_buy=Predict_Sku_3449673$stop_auto_buy
+Predict_Sku_3449673_norm$rev_stop=Predict_Sku_3449673$rev_stop
+Predict_Sku_3449673_norm$went_on_backorder=Predict_Sku_3449673$went_on_backorder
+
+Predict_Sku_3449673_norm$potential_issue=as.numeric(Predict_Sku_3449673_norm$potential_issue)
+Predict_Sku_3449673_norm$deck_risk=as.numeric(Predict_Sku_3449673_norm$deck_risk)
+Predict_Sku_3449673_norm$oe_constraint=as.numeric(Predict_Sku_3449673_norm$oe_constraint)
+Predict_Sku_3449673_norm$ppap_risk=as.numeric(Predict_Sku_3449673_norm$ppap_risk)
+Predict_Sku_3449673_norm$stop_auto_buy=as.numeric(Predict_Sku_3449673_norm$stop_auto_buy)
+Predict_Sku_3449673_norm$rev_stop=as.numeric(Predict_Sku_3449673_norm$rev_stop)
+
+Prediction_Sku_3449673 <-knn(train=Train.df[1:21], 
+                 test=Predict_Sku_3449673_norm,
+                 cl=Train.df$went_on_backorder,
+                 k=10)##best k value
+print(Prediction_Sku_3449673)
+```
+##Prediction of no backorder
+
+
+##Backorder prediction on 2nd sku
+```{r}
+Predict_Sku_3301406=data.frame(national_inv=627349, lead_time=8, in_transit_qty=123648, forecast_3_month=1092576, forecast_6_month=2157024, forecast_9_month=3124704, sales_1_month=290705, sales_3_month=912833, sales_6_month=1762825, sales_9_month=2616764, min_bank=191682, potential_issue=0, pieces_past_due=0, perf_6_month_avg=0.55, perf_12_month_avg=0.74, local_bo_qty=0, deck_risk=0, oe_constraint=0, ppap_risk=0, stop_auto_buy=1, rev_stop=0)
+
+Predict_Sku_3301406_norm=Predict_Sku_3301406
+Predict_Sku_3301406_norm$potential_issue<-NULL
+Predict_Sku_3301406_norm$deck_risk<-NULL
+Predict_Sku_3301406_norm$oe_constraint<-NULL
+Predict_Sku_3301406_norm$ppap_risk<-NULL
+Predict_Sku_3301406_norm$stop_auto_buy<-NULL
+Predict_Sku_3301406_norm$rev_stop<-NULL
+Predict_Sku_3301406_norm$went_on_backorder<-NULL
+Predict_Sku_3301406_norm=predict(Norm_model,Predict_Sku_3301406_norm)
+
+Predict_Sku_3301406_norm$potential_issue=Predict_Sku_3301406$potential_issue
+Predict_Sku_3301406_norm$deck_risk=Predict_Sku_3301406$deck_risk
+Predict_Sku_3301406_norm$oe_constraint=Predict_Sku_3301406$oe_constraint
+Predict_Sku_3301406_norm$ppap_risk=Predict_Sku_3301406$ppap_risk
+Predict_Sku_3301406_norm$stop_auto_buy=Predict_Sku_3301406$stop_auto_buy
+Predict_Sku_3301406_norm$rev_stop=Predict_Sku_3301406$rev_stop
+Predict_Sku_3301406_norm$went_on_backorder=Predict_Sku_3301406$went_on_backorder
+
+Predict_Sku_3301406_norm$potential_issue=as.numeric(Predict_Sku_3301406_norm$potential_issue)
+Predict_Sku_3301406_norm$deck_risk=as.numeric(Predict_Sku_3301406_norm$deck_risk)
+Predict_Sku_3301406_norm$oe_constraint=as.numeric(Predict_Sku_3301406_norm$oe_constraint)
+Predict_Sku_3301406_norm$ppap_risk=as.numeric(Predict_Sku_3301406_norm$ppap_risk)
+Predict_Sku_3301406_norm$stop_auto_buy=as.numeric(Predict_Sku_3301406_norm$stop_auto_buy)
+Predict_Sku_3301406_norm$rev_stop=as.numeric(Predict_Sku_3301406_norm$rev_stop)
+
+Prediction_Sku_3301406 <-knn(train=Train.df[1:21], 
+                 test=Predict_Sku_3301406_norm,
+                 cl=Train.df$went_on_backorder,
+                 k=10)
+print(Prediction_Sku_3301406)
+```
+##Prediction of no backorder
+
+##Backorder prediction on 3rd sku
+```{r}
+Predict_Sku_3337435=data.frame(national_inv=786698, lead_time=8, in_transit_qty=37248, forecast_3_month=1510592, forecast_6_month=1858864, forecast_9_month=1858864, sales_1_month=187474, sales_3_month=197602, sales_6_month=197602, sales_9_month=202734, min_bank=131888, potential_issue=0, pieces_past_due=0, perf_6_month_avg=0.89, perf_12_month_avg=0.9, local_bo_qty=0, deck_risk=0, oe_constraint=0, ppap_risk=0, stop_auto_buy=1, rev_stop=0)
+
+Predict_Sku_3337435_norm=Predict_Sku_3337435
+Predict_Sku_3337435_norm$potential_issue<-NULL
+Predict_Sku_3337435_norm$deck_risk<-NULL
+Predict_Sku_3337435_norm$oe_constraint<-NULL
+Predict_Sku_3337435_norm$ppap_risk<-NULL
+Predict_Sku_3337435_norm$stop_auto_buy<-NULL
+Predict_Sku_3337435_norm$rev_stop<-NULL
+Predict_Sku_3337435_norm$went_on_backorder<-NULL
+Predict_Sku_3337435_norm=predict(Norm_model,Predict_Sku_3337435_norm)
+
+Predict_Sku_3337435_norm$potential_issue=Predict_Sku_3337435$potential_issue
+Predict_Sku_3337435_norm$deck_risk=Predict_Sku_3337435$deck_risk
+Predict_Sku_3337435_norm$oe_constraint=Predict_Sku_3337435$oe_constraint
+Predict_Sku_3337435_norm$ppap_risk=Predict_Sku_3337435$ppap_risk
+Predict_Sku_3337435_norm$stop_auto_buy=Predict_Sku_3337435$stop_auto_buy
+Predict_Sku_3337435_norm$rev_stop=Predict_Sku_3337435$rev_stop
+Predict_Sku_3337435_norm$went_on_backorder=Predict_Sku_3337435$went_on_backorder
+
+Predict_Sku_3337435_norm$potential_issue=as.numeric(Predict_Sku_3337435_norm$potential_issue)
+Predict_Sku_3337435_norm$deck_risk=as.numeric(Predict_Sku_3337435_norm$deck_risk)
+Predict_Sku_3337435_norm$oe_constraint=as.numeric(Predict_Sku_3337435_norm$oe_constraint)
+Predict_Sku_3337435_norm$ppap_risk=as.numeric(Predict_Sku_3337435_norm$ppap_risk)
+Predict_Sku_3337435_norm$stop_auto_buy=as.numeric(Predict_Sku_3337435_norm$stop_auto_buy)
+Predict_Sku_3337435_norm$rev_stop=as.numeric(Predict_Sku_3337435_norm$rev_stop)
+
+Prediction_Sku_3337435 <-knn(train=Train.df[1:21], 
+                 test=Predict_Sku_3337435_norm,
+                 cl=Train.df$went_on_backorder,
+                 k=10)
+print(Prediction_Sku_3337435)
+
+```
+##Prediction of no backorder
